@@ -1,11 +1,9 @@
 package com.example.passwordmgtsystem.services;
 import com.example.passwordmgtsystem.dtos.requests.CreateUserRequest;
-import com.example.passwordmgtsystem.dtos.requests.UserDetailsRequests;
+import com.example.passwordmgtsystem.dtos.requests.UserRequestDto;
 import com.example.passwordmgtsystem.dtos.responses.CreateUserResponse;
-import com.example.passwordmgtsystem.dtos.responses.RegisterUserDetailsResponse;
 import com.example.passwordmgtsystem.exceptions.PasswordMgtException;
-import com.example.passwordmgtsystem.models.UserDetails;
-import com.example.passwordmgtsystem.models.Users;
+import com.example.passwordmgtsystem.models.User;
 import com.example.passwordmgtsystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,11 +23,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public CreateUserResponse registerUser(CreateUserRequest createUserRequest) {
-        Optional<Users>optionalUsers = userRepository.findUsersByEmail(createUserRequest.getEmail());
-        if (optionalUsers.isPresent()){
+        Optional<User>optionalUser = userRepository.findUserByEmail(createUserRequest.getEmail());
+        if (optionalUser.isPresent()){
             throw new PasswordMgtException("user is already present");
         }
-            Users users = new Users();
+            User users = new User();
             users.setEmail(createUserRequest.getEmail());
 //            users.setPassword(createUserRequest.getPassword());
             users.setMasterPassword(createUserRequest.getMasterPassword());
@@ -43,12 +41,30 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public void updateUser(String email, String id) {
+    public  String updateUser(String email, UserRequestDto userDetails) {
+            User users = userRepository.findUserByEmail(email).orElseThrow(()-> new
+                    PasswordMgtException("user account does not exist"));
+            boolean isUpdated = false;
+            if (!(userDetails.getEmail()== null || userDetails.getEmail().trim().equals(""))) {
+                users.setEmail(userDetails.getEmail());
+                isUpdated = true;
+            }
+            if (!(userDetails.getMasterPassword()== null || userDetails.getMasterPassword().trim().equals(""))) {
+                users.setMasterPassword(userDetails.getMasterPassword());
+                isUpdated = true;
+            }
+            if (isUpdated) {
+                userRepository.save(users);
+            }
+            return "user details updated successfully";
+        }
 
-    }
+
 
     @Override
-    public void deleteByEmail(String email) {
-
+    public void deleteByEmail(String email){
+            User users = userRepository.findUserByEmail(email).orElseThrow(() -> new PasswordMgtException("user not found"));
+            userRepository.delete(users);
+        }
     }
-}
+

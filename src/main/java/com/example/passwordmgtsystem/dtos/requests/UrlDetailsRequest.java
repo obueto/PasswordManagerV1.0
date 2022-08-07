@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserDetailsRequests {
+public class UrlDetailsRequest {
     private String email;
     private String appName;
     private String urlAddress;

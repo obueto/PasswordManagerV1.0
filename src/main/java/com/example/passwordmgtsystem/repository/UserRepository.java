@@ -1,17 +1,17 @@
 package com.example.passwordmgtsystem.repository;
 
-import com.example.passwordmgtsystem.models.Users;
+import com.example.passwordmgtsystem.models.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Service
-public interface UserRepository extends MongoRepository<Users,String>{
-    Optional<Users> findUsersByEmail(String email);
+@Repository
+public interface UserRepository extends MongoRepository<User,String>{
+    Optional<User> findUserByEmail(String email);
 //Users findUsersByEmail(String email);
-Users deleteUsersByMasterPasswordAndEmail(String password, String email);
-Users queryAllByEmail(String email);
+User deleteUsersByMasterPasswordAndEmail(String password, String email);
+User queryAllByEmail(String email);
 
 
 

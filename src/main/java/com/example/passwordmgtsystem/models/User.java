@@ -1,27 +1,25 @@
 package com.example.passwordmgtsystem.models;
 
-import com.example.passwordmgtsystem.services.Password;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.Size;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @EqualsAndHashCode
 @Document("Users")
-public class Users {
+public class User {
     @Id
     private  String id;
     @UniqueElements
     @Size(max = 30)
     private String email;
     private String masterPassword;
-//    private Password password;
+
 
 }
